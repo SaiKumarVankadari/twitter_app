@@ -17,6 +17,7 @@ model User {
   tweets    Tweet[]
   comments Comment[]
   reactions Reaction[]
+  replies  Reply[] 
 }
 
 model Tweet {
@@ -36,12 +37,27 @@ model Comment {
   updatedContent String?
   createdAt DateTime    @default(now())
   updatedAt DateTime @updatedAt
-  authorId  Int
-  author    User        @relation(fields: [authorId], references: [id])
+  authorId  Int?
+  author    User?        @relation(fields: [authorId], references: [id])
   tweetId    Int
   tweet      Tweet        @relation(fields: [tweetId], references: [id])
   reactions Reaction[]
+  replies   Reply[]   @relation("CommentToReply")
 }
+
+// schema.prisma
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  commentId Int
+  userId    Int
+  comment   Comment  @relation("CommentToReply", fields: [commentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
 
 model Reaction {
   id        Int      @id @default(autoincrement())
