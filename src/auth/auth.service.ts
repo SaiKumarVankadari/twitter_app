@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { jwtSecret} from '../utils/constants';
 import { Request, Response } from 'express';
-// import { EmailService } from './email.service';
+import { EmailService } from 'src/email/email.service';
 
 
 @Injectable()
@@ -24,8 +24,8 @@ export class AuthService {
   return null;
     }
 
-    constructor(private jwt: JwtService, private prisma: PrismaService )  {}
-    // private readonly emailService: EmailService,
+    constructor(private jwt: JwtService, private prisma: PrismaService,private readonly emailService: EmailService )  {}
+    
 
     async signup(dto:AuthDto) {
         const { username, email, password  } = dto;
@@ -45,7 +45,7 @@ export class AuthService {
                 password: hashedPassword
             }
         })
-        // await this.emailService.sendWelcomeEmail(dto.email);
+        await this.emailService.sendWelcomeMail(dto.email);
 
         return { message: 'signup was succesful'};
     }

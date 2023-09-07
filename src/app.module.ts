@@ -11,6 +11,8 @@ import { TweetsController } from './tweets/tweets.controller';
 import { TweetsModule } from './tweets/tweets.module';
 import { TweetsService } from './tweets/tweets.service';
 import { ReactionsModule } from './reactions/reactions.module';
+import { EmailModule } from './email/email.module';
+import { EmailService } from './email/email.service';
 
 
 @Module({
@@ -18,10 +20,10 @@ import { ReactionsModule } from './reactions/reactions.module';
     JwtModule.register({ // Use JwtModule.register to configure JwtModule
       secret: 'JWT_SECRET',
       signOptions: { expiresIn: '1h' },
-    }), TweetsModule, ReactionsModule,
+    }), TweetsModule, ReactionsModule, EmailModule,
     
 ],
-  providers: [PrismaService, LocalStrategy,AuthService, TweetsService],
+  providers: [PrismaService, LocalStrategy,AuthService, TweetsService, EmailService],
   controllers: [TweetsController],
 })
 export class AppModule {}

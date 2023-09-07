@@ -1,0 +1,15 @@
+import { Body, Controller, Post } from '@nestjs/common';
+import { EmailService } from './email.service';
+
+@Controller('email')
+export class EmailController {
+    constructor( private readonly email: EmailService){
+
+    }
+    @Post('sendMail')
+    async sendWelcomemail(@Body() data: {email: string}){
+        await this.email.sendWelcomeMail(data.email);
+        return {message: 'Welcome mail Sent'};
+        console.log("mail")
+    }
+}
