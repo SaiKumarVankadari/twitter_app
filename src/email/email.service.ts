@@ -7,7 +7,7 @@ export class EmailService {
 
     constructor(){
         this.transporter= nodemailer.createTransport({
-            service: 'gmail',
+            // service: 'gmail',
             host: 'sandbox.smtp.mailtrap.io',
             port: 587,
             auth:{
@@ -17,10 +17,10 @@ export class EmailService {
         });
     }
 
-    async sendWelcomeMail(too: string){
+    async sendWelcomeMail(to: string){
         const mailOptions= {
             from: 'vankadarisaikumar7@gmail.com',
-            to : 'saikumarvankadari7@gmail.com',
+            to : to,
             subject: 'Welcome to X!!!!',
             text: 'Welcome to X! We are excited to have you as a user.'
         };

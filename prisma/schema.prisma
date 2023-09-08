@@ -43,6 +43,23 @@ model Comment {
   reactions Reaction[]
 }
 
+<<<<<<< Updated upstream
+=======
+// schema.prisma
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  commentId Int
+  authorId    Int
+  comment   Comment  @relation("CommentToReply", fields: [commentId], references: [id])
+  user      User     @relation(fields: [authorId], references: [id])
+}
+
+
+>>>>>>> Stashed changes
 model Reaction {
   id        Int      @id @default(autoincrement())
   type      String

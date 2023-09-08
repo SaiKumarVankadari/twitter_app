@@ -9,7 +9,7 @@ export class EmailController {
     @Post('sendMail')
     async sendWelcomemail(@Body() data: {email: string}){
         await this.email.sendWelcomeMail(data.email);
+        console.log("mail");
         return {message: 'Welcome mail Sent'};
-        console.log("mail")
     }
 }
