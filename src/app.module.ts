@@ -11,6 +11,12 @@ import { TweetsController } from './tweets/tweets.controller';
 import { TweetsModule } from './tweets/tweets.module';
 import { TweetsService } from './tweets/tweets.service';
 import { ReactionsModule } from './reactions/reactions.module';
+import { EmailModule } from './email/email.module';
+import { EmailService } from './email/email.service';
+import { ChatGptService } from './chatgpt/chatgpt.service';
+import { ContentCategorizationController } from './content-categorization/content-categorization.controller';
+import { ContentCategorizationModule } from './content-categorization/content-categorization.module';
+import { CommentModule } from './comment/comment.module';
 
 
 @Module({
@@ -18,10 +24,10 @@ import { ReactionsModule } from './reactions/reactions.module';
     JwtModule.register({ // Use JwtModule.register to configure JwtModule
       secret: 'JWT_SECRET',
       signOptions: { expiresIn: '1h' },
-    }), TweetsModule, ReactionsModule,
+    }), TweetsModule, ReactionsModule, EmailModule,  ContentCategorizationModule, CommentModule
     
 ],
-  providers: [PrismaService, LocalStrategy,AuthService, TweetsService],
-  controllers: [TweetsController],
+  providers: [PrismaService, LocalStrategy,AuthService, TweetsService, EmailService, ChatGptService,],
+  controllers: [TweetsController, ContentCategorizationController],
 })
 export class AppModule {}
