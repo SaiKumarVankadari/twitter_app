@@ -5,14 +5,35 @@ import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt';
 import { jwtSecret} from '../utils/constants';
 import { Request, Response } from 'express';
-import { EmailService } from 'src/email/email.service';
+// import { EmailService } from 'src/email/email.service';
 
 
 @Injectable()
 export class AuthService {
-    findOrCreateUserFromGoogle(arg0: { googleId: any; email: any; name: any; }) {
-        throw new Error('Method not implemented.');
-    }
+    async findOrCreateUserFromGoogle(profile: any): Promise<any>  {
+        const { googleId, email, displayName } = profile;
+    
+        // Check if a user with the same Google ID exists in your database
+        const existingUser = await this.prisma.user.findFirst({
+          where: {id: googleId },
+        });
+    
+        if (existingUser) {
+          return existingUser;
+        }
+    
+        // If the user doesn't exist, create a new user
+        const createdUser = await this.prisma.user.create({
+          data: {
+            username: displayName,
+            email,
+          },
+        });
+    
+        return createdUser;
+      }
+    
+    
     handleGoogleRedirect(req: any) {
       throw new Error('Method not implemented.');
     }
@@ -24,8 +45,8 @@ export class AuthService {
   return null;
     }
 
-    constructor(private jwt: JwtService, private prisma: PrismaService,private readonly emailService: EmailService )  {}
-    
+    constructor(private jwt: JwtService, private prisma: PrismaService )  {}
+    // ,private readonly emailService: EmailService    
 
     async signup(dto:AuthDto) {
         const { username, email, password  } = dto;
@@ -38,16 +59,16 @@ export class AuthService {
 
         const hashedPassword = await this.hashPassword(password)
 
-        await this.prisma.user.create({
+        const createdUser =await this.prisma.user.create({
             data: {
                 username,
                 email,
                 password: hashedPassword
             }
         })
-        await this.emailService.sendWelcomeMail(dto.email);
+        // await this.emailService.sendWelcomeMail(dto.email);
 
-        return { message: 'signup was succesful'};
+        return { message: 'signup was succesful', user: { id: createdUser.id, username: createdUser.username, email:createdUser.email }};
     }
 
     
@@ -78,7 +99,7 @@ export class AuthService {
         }
 
         res.cookie('token', token)
-        return res.send({message: 'logged in succesfully'})
+        return res.send({message: 'logged in succesfully', user:{id: foundUser.id, username:foundUser.username}})
     }
 
     async signout(req: Request, res: Response) {
@@ -100,10 +121,11 @@ export class AuthService {
     async signToken(args: {id:number, email:string}){
         const payload = args 
 
-        return this.jwt.signAsync(payload, {secret:jwtSecret})
-    }
-
-
-
-    
+        try{
+            const token = await this.jwt.signAsync(payload, {secret:jwtSecret});
+            return token;
+        }catch(error){
+            throw new Error('Unable to sign TOKEN');
+        }
+    }  
 }

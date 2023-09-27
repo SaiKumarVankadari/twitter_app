@@ -1,20 +1,30 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, UseGuards, Patch, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { AuthGuard } from 'src/auth/jwt.guard';
+import { User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getUser(@Param() params :{ id: number}){
-    return this.usersService.getUser(params.id)
+  @UseGuards(AuthGuard)
+  getUser(@Param('id', ParseIntPipe)  id: number){
+    return this.usersService.getUser(id)
   }
 
   @Get()
   getUsers(){
     return this.usersService.getUsers()
+  }
+  @Delete(':id')
+  async softDelete(@Param('id') id: string): Promise<User | null> {
+    return this.usersService.softDelete(+id);
+  }
+
+  @Get(':id/restore')
+  async restore(@Param('id') id: string): Promise<User | null> {
+    return this.usersService.restore(+id);
   }
 }

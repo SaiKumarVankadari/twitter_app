@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="main.css">
+
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+}
+
+.input-container button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+li.checked {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+li span {
+    flex: 1;
+    margin-right: 10px;
+}
+
+button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Enter task...">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        const inputBox = document.getElementById("taskInput");
+const taskList = document.getElementById("taskList");
+
+function createTaskElement(task) {
+    const li = document.createElement("li");
+    const taskContainer = document.createElement("span");
+    taskContainer.textContent = task.text;
+
+    if (task.checked) {
+        li.classList.add("checked");
+    }
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = function () {
+        li.remove();
+        saveTasks();
+    };
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.onclick = function () {
+        editTask(li, taskContainer);
+    };
+
+    li.appendChild(taskContainer);
+    li.appendChild(editButton);
+    li.appendChild(deleteButton);
+
+    return li;
+}
+
+function addTask() {
+    const taskText = inputBox.value.trim();
+    if (taskText === '') {
+        alert("Write the Task ToDo");
+        return;
+    }
+
+    const task = {
+        text: taskText,
+        checked: false
+    };
+
+    const taskElement = createTaskElement(task);
+    taskList.appendChild(taskElement);
+    inputBox.value = '';
+
+    saveTasks();
+}
+
+function editTask(li, taskContainer) {
+    const newText = prompt("Edit the task:", taskContainer.textContent);
+    if (newText !== null) {
+        taskContainer.textContent = newText;
+        saveTasks();
+    }
+}
+
+taskList.addEventListener("click", function (e) {
+    if (e.target.tagName === "SPAN") {
+        e.target.parentElement.classList.toggle("checked");
+        saveTasks();
+    }
+}, false);
+
+function saveTasks() {
+    const tasks = [];
+    const taskElements = taskList.querySelectorAll("li");
+
+    for (const li of taskElements) {
+        const task = {
+            text: li.querySelector("span").textContent,
+            checked: li.classList.contains("checked")
+        };
+        tasks.push(task);
+    }
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        taskList.appendChild(taskElement);
+    });
+}
+
+loadTasks();
+
+    </script>
+</body>
+
+</html>
