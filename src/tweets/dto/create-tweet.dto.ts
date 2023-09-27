@@ -8,5 +8,6 @@ export class CreateTweetDto{
     content: string;
 
     @IsNumber()
+    @IsNotEmpty()
     authorId: number;
 }

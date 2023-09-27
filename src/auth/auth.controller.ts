@@ -1,25 +1,33 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger'; 
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'; 
+import { AuthGuard } from './jwt.guard';
+import { profile } from 'console';
+import { GoogleGuard } from './google.guard';
 
 @ApiTags('ToDo')
 @Controller('auth')
 export class AuthController {
   
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
+  constructor(private readonly authService: AuthService) {}
 
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return this.authService.handleGoogleRedirect(req);
+  @Get('google')
+  @UseGuards(GoogleGuard)
+  async googleAuth(@Req() req) {
+    // await this.authService.findOrCreateUserFromGoogle(profile);
   }
 
-  
-  constructor(private readonly authService: AuthService) {}
+  @Get('google/callback')
+  @UseGuards(GoogleGuard)
+  async googleAuthRedirect(@Req() req, @Res() res) {
+    const user = req.user;
+    if (user) {
+      res.redirect('/api');
+    } else {
+      res.redirect('/login-failed');
+    }
+  }
 
   // @UseGuards(AuthGuard('local'))
   @Post('signup')
@@ -27,8 +35,9 @@ export class AuthController {
     return this.authService.signup(dto)
   }
 
-  // @UseGuards(AuthGuard('local'))
   @Post('signin')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   signin(@Body() dto:AuthDto, @Req() req, @Res() res){
     return this.authService.signin(dto, req, res)
   }

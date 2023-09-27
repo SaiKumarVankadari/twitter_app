@@ -1,16 +1,12 @@
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
+// import { Type } from 'class-transformer';
+
 
 export class CreateCommentDto {
+  @IsNotEmpty()
     @IsString()
-    @IsNotEmpty()
     content: string;
-    
-    @IsInt()
-    authorId?: number;
+  
+    @IsNumber()
+    authorId: number;
   }
-  
-  // update-comment.dto.ts
-  export class UpdateCommentDto {
-    content: string;
-  } 
-  

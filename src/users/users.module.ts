@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 @Module({
+  imports:[],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],
 })

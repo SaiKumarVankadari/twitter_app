@@ -28,7 +28,7 @@ export class ReactionsController {
     return this.reactionsService.update(id, updateReactionDto)
   }
 
-  @Delete()
+  @Delete(':id')
   deleteReaction(@Param('id', ParseIntPipe) id: number){
     return this.reactionsService.deleteReaction(id);
   }
