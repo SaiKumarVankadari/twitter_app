@@ -6,7 +6,7 @@ import { LoggerService } from 'src/logger.service';
 export class CronsService {
     constructor(private readonly xapp: LoggerService){}
     // private readonly logger = new Logger(CronsService.name);
-    @Cron('*/10 * 10-17 * * *')
+    @Cron('*/10 */30 10-19 * * *')
   handleCron() {
     this.xapp.debug('hey there! I am your CRON JOB at 10th second for every 10 minutes');
   }
