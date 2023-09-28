@@ -44,6 +44,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { FileModule } from './file/file.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { RedisCacheModule } from './redis-cache.module';
+import { LoggerService } from './logger.service';
 
 
 
@@ -76,7 +77,7 @@ import { RedisCacheModule } from './redis-cache.module';
     ScheduleModule.forRoot(), TweetsModule, ReactionsModule, EmailModule, CommentModule, RepliesModule, GatewayModule, OpenAiModule, NotificationsModule, CaptchaModule, UploadModule, GraphqlModule, HttpModule, FirebaseModule, MongoModule, FileModule
     
 ],
-  providers: [PrismaService, JwtService,AuthDto, LocalStrategy,AuthService, TweetsService, EmailService, OpenAIService, CronsService, CaptchaService, SlackCronService, SlackNotificationService, GoogleStrategy, FirestoreService],
+  providers: [LoggerService ,PrismaService, JwtService,AuthDto, LocalStrategy,AuthService, TweetsService, EmailService, OpenAIService, CronsService, CaptchaService, SlackCronService, SlackNotificationService, GoogleStrategy, FirestoreService],
   controllers: [TweetsController, SlackController, FirestoreController ],
 })
 export class AppModule implements NestModule {
