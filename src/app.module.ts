@@ -43,11 +43,12 @@ import { MongoModule } from './mongoose/mongoose.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FileModule } from './file/file.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { RedisCacheModule } from './redis-cache.module';
 
 
 
 @Module({
-  imports: [AuthModule, PrismaModule, UsersModule, PassportModule, AppModule,
+  imports: [RedisCacheModule, AuthModule, PrismaModule, UsersModule, PassportModule, AppModule,
     JwtModule.register({ // Use JwtModule.register to configure JwtModule
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
