@@ -2,6 +2,7 @@ import { Controller, Get, Param, ParseIntPipe, UseGuards, Patch, Delete } from '
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/jwt.guard';
 import { User } from '@prisma/client';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('users')
 export class UsersController {
@@ -9,6 +10,7 @@ export class UsersController {
 
 
   @Get(':id')
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @UseGuards(AuthGuard)
   getUser(@Param('id', ParseIntPipe)  id: number){
     return this.usersService.getUser(id)
