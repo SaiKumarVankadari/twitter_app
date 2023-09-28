@@ -50,7 +50,6 @@ export class MongooseService {
       message,
       user: userId,
     });
-    console.log('Notification Data to be Saved:', notification);
     return notification.save();
   }
 

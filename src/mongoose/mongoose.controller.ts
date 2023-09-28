@@ -28,9 +28,10 @@ export class MongooseController {
   @Post(':userId')
   async createNotification(@Param('userId') userId: string, @Body() createNotificationDto: any) {
     const { message } = createNotificationDto;
-    const savedNotification = await this.mongooseService.createNotification(userId, message);
-    console.log('Saved Notification:', savedNotification);
-    return savedNotification;  }
+    return this.mongooseService.createNotification(userId, message);
+    // console.log('Saved Notification:', savedNotification);
+    // return savedNotification; 
+   }
 
   // Get all notifications for a user
   @Get(':userId')
