@@ -45,8 +45,6 @@ import { FileModule } from './file/file.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { RedisCacheModule } from './redis-cache.module';
 import { LoggerService } from './logger.service';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
 
 
 
@@ -75,21 +73,11 @@ import { APP_GUARD } from '@nestjs/core';
     PassportModule.register({defaultStrategy:'google'}),
 
    MongooseModule.forRoot('mongodb://localhost/myDb'),
-
-   ThrottlerModule.forRoot([{
-    ttl: 60000,
-    limit: 10,
-  }]),
     
     ScheduleModule.forRoot(), TweetsModule, ReactionsModule, EmailModule, CommentModule, RepliesModule, GatewayModule, OpenAiModule, NotificationsModule, CaptchaModule, UploadModule, GraphqlModule, HttpModule, FirebaseModule, MongoModule, FileModule
     
 ],
-  providers: [LoggerService ,PrismaService, JwtService,AuthDto, LocalStrategy,AuthService, TweetsService, EmailService, OpenAIService, CronsService, CaptchaService, SlackCronService, SlackNotificationService, GoogleStrategy, FirestoreService
-    ,{
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
-    ],
+  providers: [LoggerService ,PrismaService, JwtService,AuthDto, LocalStrategy,AuthService, TweetsService, EmailService, OpenAIService, CronsService, CaptchaService, SlackCronService, SlackNotificationService, GoogleStrategy, FirestoreService],
   controllers: [TweetsController, SlackController, FirestoreController ],
 })
 export class AppModule implements NestModule {
